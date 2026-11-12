@@ -1,0 +1,275 @@
+{
+  "profile": {
+    "name": "Rana Romdhane",
+    "title": "AI/ML Engineer",
+    "location": "Ariana, Tunisia",
+    "email": "ranaromdhane1@gmail.com",
+    "linkedin": "https://linkedin.com/in/rana-romdhane-260b70293",
+    "github": "https://github.com/RanaRomdhane",
+    "resume": "/Rana_Romdhane_Resume.pdf",
+    "photo": "/media/rana-profile.jpg",
+    "talkingVideo": "/media/rana-talking.mp4",
+    "idleVideo": "",
+    "roles": [
+      "AI/ML Engineer",
+      "Vision-Language Model Researcher",
+      "RAG & LLM Builder",
+      "React / TypeScript Developer"
+    ],
+    "tagline": "I design, train and ship machine learning systems, from predictive models and computer vision to LLM-powered assistants.",
+    "summary": "AI/ML Engineer with a Computer Science engineering degree and hands-on experience designing, training, and deploying end-to-end machine learning solutions spanning predictive modeling, computer vision, NLP, and LLM-based applications. Published researcher in Vision-Language Models, combining strong software engineering fundamentals, including modern React/TypeScript front-end development, with a focus on delivering measurable, production-ready results.",
+    "stats": [
+      { "value": 96.81, "decimals": 2, "suffix": "%", "label": "Accuracy on compound emotion recognition", "source": "BLIP-2 + LoRA" },
+      { "value": 0.997, "decimals": 3, "prefix": "R² ", "label": "Forecasting score in production planning", "source": "TransportAI" },
+      { "value": 96, "decimals": 0, "suffix": "%", "label": "Answer faithfulness of my RAG assistant", "source": "TransportAI" },
+      { "value": 87, "decimals": 0, "suffix": "%", "label": "Task prioritization accuracy", "source": "BERT model" },
+      { "value": 65, "decimals": 0, "suffix": "%", "label": "Manual planning time saved", "source": "Dabba Dabba" },
+      { "value": 200, "decimals": 0, "suffix": "K+", "label": "Financial records analyzed", "source": "Maram Company" }
+    ],
+    "languages": [
+      { "name": "Arabic", "level": "Native", "pips": 6 },
+      { "name": "English", "level": "Advanced (C1)", "pips": 5 },
+      { "name": "French", "level": "Upper-Intermediate (B2)", "pips": 4 }
+    ]
+  },
+  "experience": [
+    {
+      "id": "soretrak",
+      "role": "AI Engineer Intern (Final-Year Project)",
+      "company": "SORETRAK",
+      "location": "Kairouan, Tunisia",
+      "period": "Feb 2026 – June 2026",
+      "logo": "",
+      "color": "teal",
+      "headline": "TransportAI: an intelligent public transport management platform",
+      "reward": "R² 0.997",
+      "bullets": [
+        "Designed and delivered TransportAI, an intelligent public transport management platform integrating a React analytical dashboard, an ML prediction engine, an assisted planning system, and a breakdown management module.",
+        "Benchmarked multiple regression models (Random Forest, XGBoost, Gradient Boosting, Linear Regression) for operational forecasting; selected Random Forest achieving R² = 0.997, enabling data-driven planning from previously underexploited company data.",
+        "Engineered a multilingual conversational assistant using a RAG pipeline (LangChain, ChromaDB) over a locally deployed LLM via Ollama, achieving 96% answer faithfulness on a 50-question evaluation set.",
+        "Architected a fully on-premise, cloud-independent stack (React, FastAPI, Oracle 11g, Ollama) and built the platform's responsive React front-end consuming FastAPI REST APIs, guaranteeing data confidentiality and operational autonomy."
+      ],
+      "stack": ["React", "FastAPI", "Scikit-learn", "XGBoost", "LangChain", "ChromaDB", "Ollama", "Oracle"]
+    },
+    {
+      "id": "dabba",
+      "role": "AI Engineer Intern",
+      "company": "Sté Dabba Dabba",
+      "location": "Monastir, Tunisia",
+      "period": "June 2025 – Sept 2025",
+      "logo": "",
+      "color": "gold",
+      "headline": "AI-powered task management built on the GTD methodology",
+      "reward": "87% accuracy",
+      "bullets": [
+        "Developed a BERT-based NLP model reaching 87% accuracy in task prioritization across 10,000+ tasks within an AI-powered task management application (React/Next.js, GTD methodology).",
+        "Automated scheduling through calendar API integration, cutting manual planning time by 65%."
+      ],
+      "stack": ["BERT", "Hugging Face Transformers", "PyTorch", "React", "Next.js"]
+    },
+    {
+      "id": "maram",
+      "role": "Data Analytics Intern",
+      "company": "Maram Company",
+      "location": "Ksar Hlal, Tunisia",
+      "period": "June 2024 – July 2024",
+      "logo": "",
+      "color": "coral",
+      "headline": "Financial data pipelines and executive dashboards",
+      "reward": "-60% processing time",
+      "bullets": [
+        "Automated ETL pipelines for financial data with Python and Power BI, reducing processing time by 60%.",
+        "Built 12+ executive KPI dashboards and analyzed 200K+ financial records to surface trends and anomalies."
+      ],
+      "stack": ["Python", "Pandas", "Power BI", "SQL"]
+    }
+  ],
+  "projects": [
+    {
+      "id": "vision-llm",
+      "title": "Vision-LLM for Compound Facial Emotion Recognition",
+      "short": "Fine-tuned BLIP-2 with LoRA to read 14 compound emotions at 96.81% accuracy.",
+      "badge": "Published research",
+      "domains": ["CV", "NLP", "ML"],
+      "icon": "face",
+      "color": "teal",
+      "image": "",
+      "metric": { "value": "96.81%", "label": "accuracy" },
+      "description": "A multi-architecture study of compound facial emotion recognition, comparing classic vision backbones with Vision-Language Models and explaining what the best model actually looks at.",
+      "highlights": [
+        "Benchmarked four architectures (ResNet50, ViT, LLaVA-1.5, BLIP-2) on the RAF-CE dataset (3,618 images, 14 classes).",
+        "Fine-tuned BLIP-2 with LoRA to 96.81% accuracy / 97.91% macro F1, a 117% gain over CNN baselines.",
+        "Validated model attention on facial action units using Grad-CAM and SHAP.",
+        "Deployed a real-time Streamlit demo."
+      ],
+      "stack": ["PyTorch", "Hugging Face Transformers", "LoRA fine-tuning", "OpenCV", "Streamlit", "Python"],
+      "links": [
+        { "label": "View code", "url": "https://github.com/RanaRomdhane/Vision-LLM-compound-emotions", "kind": "github" },
+        { "label": "Read the paper", "url": "https://github.com/RanaRomdhane/Vision-LLM-compound-emotions/blob/main/article_and_presentations/Article_VLM_COC2026_CR.pdf", "kind": "paper" }
+      ]
+    },
+    {
+      "id": "transportai",
+      "title": "TransportAI: Smart Public Transport Platform",
+      "short": "Forecasting, assisted planning and a multilingual RAG assistant, all running on-premise.",
+      "badge": "Final-year project",
+      "domains": ["ML", "NLP", "Web"],
+      "icon": "bus",
+      "color": "denim",
+      "image": "",
+      "metric": { "value": "R² 0.997", "label": "forecasting" },
+      "description": "An intelligent management platform built for SORETRAK, turning previously underexploited company data into forecasts, planning support and instant answers.",
+      "highlights": [
+        "React analytical dashboard, ML prediction engine, assisted planning system and breakdown management module.",
+        "Random Forest selected after benchmarking four regression models, reaching R² = 0.997.",
+        "Multilingual RAG assistant (LangChain, ChromaDB, Ollama) with 96% answer faithfulness on a 50-question evaluation set.",
+        "Fully on-premise, cloud-independent stack that keeps company data confidential."
+      ],
+      "stack": ["React", "FastAPI", "Scikit-learn", "XGBoost", "LangChain", "ChromaDB", "Ollama", "Oracle"],
+      "links": []
+    },
+    {
+      "id": "ids",
+      "title": "Intelligent Network Intrusion Detection System",
+      "short": "A multi-model IDS spotting 8 attack families with live monitoring and alerting.",
+      "badge": "Security + ML",
+      "domains": ["ML", "Data"],
+      "icon": "shield",
+      "color": "coral",
+      "image": "",
+      "metric": { "value": "8", "label": "attack families" },
+      "description": "A machine-learning based intrusion detection system that watches network traffic in real time and raises severity-based alerts.",
+      "highlights": [
+        "Multi-model detection with Random Forest, SVM and Neural Networks.",
+        "Covers 8 attack families, including DoS/DDoS, brute force, SQL injection and botnet activity.",
+        "Real-time traffic monitoring with a WebSocket dashboard and severity-based alerting.",
+        "SIEM integration via the ELK Stack."
+      ],
+      "stack": ["Python", "Scikit-learn", "TensorFlow", "Elasticsearch", "Flask", "Docker"],
+      "links": [
+        { "label": "View code", "url": "https://github.com/RanaRomdhane/intelligent-ids", "kind": "github" }
+      ]
+    },
+    {
+      "id": "task-ai",
+      "title": "AI Task Prioritizer",
+      "short": "A BERT model that ranks 10,000+ tasks and schedules them automatically.",
+      "badge": "Internship project",
+      "domains": ["NLP", "Web"],
+      "icon": "tasks",
+      "color": "gold",
+      "image": "",
+      "metric": { "value": "87%", "label": "accuracy" },
+      "description": "The intelligence layer of an AI-powered task management app built on the Getting Things Done methodology at Sté Dabba Dabba.",
+      "highlights": [
+        "BERT-based NLP model reaching 87% accuracy in task prioritization across 10,000+ tasks.",
+        "Calendar API integration that automates scheduling, cutting manual planning time by 65%.",
+        "Integrated into a React/Next.js application."
+      ],
+      "stack": ["BERT", "Hugging Face Transformers", "PyTorch", "React", "Next.js"],
+      "links": []
+    },
+    {
+      "id": "tawa",
+      "title": "Tawa: Food Kit Delivery App",
+      "short": "A cross-platform app for iOS, Android and web with catalog, cart and delivery tracking.",
+      "badge": "Mobile app",
+      "domains": ["Web"],
+      "icon": "food",
+      "color": "gold",
+      "image": "",
+      "metric": { "value": "3", "label": "platforms" },
+      "description": "A cross-platform mobile app that lets people browse food kits, order them and follow the delivery on a map.",
+      "highlights": [
+        "Built with React Native (Expo) and TypeScript for iOS, Android and web.",
+        "Product catalog, shopping cart and ordering flow, and location-based delivery tracking.",
+        "File-based navigation with Expo Router.",
+        "Reusable, utility-first UI with NativeWind (Tailwind CSS), integrated with a REST API backend."
+      ],
+      "stack": ["React Native (Expo)", "TypeScript", "Tailwind CSS", "REST API integration"],
+      "links": [
+        { "label": "View code", "url": "https://github.com/RanaRomdhane/tawa-food-kit-app-front", "kind": "github" }
+      ]
+    },
+    {
+      "id": "finance-bi",
+      "title": "Financial KPI Dashboards",
+      "short": "Automated pipelines and 12+ executive dashboards over 200K+ financial records.",
+      "badge": "Internship project",
+      "domains": ["Data"],
+      "icon": "chart",
+      "color": "denim",
+      "image": "",
+      "metric": { "value": "-60%", "label": "processing time" },
+      "description": "Data analytics work at Maram Company that turned raw financial records into decision-ready dashboards.",
+      "highlights": [
+        "Automated ETL pipelines for financial data with Python and Power BI, reducing processing time by 60%.",
+        "Built 12+ executive KPI dashboards.",
+        "Analyzed 200K+ financial records to surface trends and anomalies."
+      ],
+      "stack": ["Python", "Pandas", "Power BI", "SQL"],
+      "links": []
+    }
+  ],
+  "publications": [
+    {
+      "id": "coc2026",
+      "type": "Conference paper",
+      "title": "Beyond Binary Emotions: A Multi-Architecture Vision-Language Approach for Compound Facial Expression Recognition",
+      "venue": "COC 2026 international conference (Senegal)",
+      "role": "First author",
+      "date": "2026",
+      "summary": "Compares ResNet50, ViT, LLaVA-1.5 and BLIP-2 on the RAF-CE dataset and shows that a LoRA fine-tuned BLIP-2 reaches 96.81% accuracy and 97.91% macro F1 on 14 compound emotion classes.",
+      "links": [
+        { "label": "Read the paper", "url": "https://github.com/RanaRomdhane/Vision-LLM-compound-emotions/blob/main/article_and_presentations/Article_VLM_COC2026_CR.pdf" },
+        { "label": "View code", "url": "https://github.com/RanaRomdhane/Vision-LLM-compound-emotions" }
+      ]
+    },
+    {
+      "id": "code-spectrum",
+      "type": "Magazine article",
+      "title": "Unraveling the Web of Network Protocols",
+      "venue": "Code Spectrum magazine, IEEE Computer Society Chapter, ENICarthage",
+      "role": "Author",
+      "date": "June 2024",
+      "summary": "A technical article walking readers through how network protocols fit together.",
+      "links": [
+        { "label": "Read the article", "url": "https://drive.google.com/file/d/1T4_PXHWv9CACStAXgCF9J4LabtGOhHQX/view" }
+      ]
+    }
+  ],
+  "education": [
+    {
+      "id": "enicarthage",
+      "school": "National Engineering School of Carthage (ENICarthage)",
+      "location": "Charguia 2, Tunisia",
+      "degree": "Engineering Degree in Computer Science",
+      "note": "Diplôme National d'Ingénieur",
+      "period": "Sept 2023 – July 2026",
+      "logo": ""
+    },
+    {
+      "id": "ipeim",
+      "school": "Preparatory Institute for Engineering Studies of Monastir",
+      "location": "Monastir, Tunisia",
+      "degree": "Preparatory Studies in Engineering",
+      "note": "Physics–Chemistry Track",
+      "period": "Sept 2021 – June 2023",
+      "logo": ""
+    }
+  ],
+  "certifications": [
+    { "id": "nvidia-diffusion", "issuer": "NVIDIA Deep Learning Institute", "title": "Generative AI with Diffusion Models", "date": "Dec 2025", "url": "https://learn.nvidia.com/certificates?id=W55s_cQ1SyC82Kfsmr7YUw", "icon": "NVIDIA" },
+    { "id": "nvidia-ads", "issuer": "NVIDIA Deep Learning Institute", "title": "Fundamentals of Accelerated Data Science", "date": "Dec 2025", "url": "https://learn.nvidia.com/certificates?id=gMc0DvVuRb6yeAlbOCb3Lg", "icon": "NVIDIA" },
+    { "id": "nvidia-workflows", "issuer": "NVIDIA Deep Learning Institute", "title": "Enhancing Data Science Outcomes with Efficient Workflows", "date": "Dec 2025", "url": "https://learn.nvidia.com/certificates?id=RhaSDLGyR3yTrrfDk1oxhA", "icon": "NVIDIA" },
+    { "id": "ibm-ai", "issuer": "IBM SkillsBuild / Cisco Networking Academy", "title": "Artificial Intelligence Fundamentals", "date": "Aug 2025", "url": "https://www.credly.com/badges/29b7c0ac-77e1-404f-bf1f-d378d48cf115", "icon": "Cisco" }
+  ],
+  "skills": [
+    { "category": "Programming", "icon": "code", "items": ["Python", "Java", "SQL", "JavaScript", "TypeScript"] },
+    { "category": "Machine Learning & Deep Learning", "icon": "brain", "items": ["PyTorch", "TensorFlow", "Scikit-learn", "XGBoost", "Pandas", "NumPy", "OpenCV", "Computer Vision", "NLP"] },
+    { "category": "LLMs & Generative AI", "icon": "robot", "items": ["RAG pipelines", "LangChain", "ChromaDB", "Ollama", "Hugging Face Transformers", "LoRA fine-tuning", "BERT", "Explainable AI (SHAP, Grad-CAM)"] },
+    { "category": "Frontend & Web", "icon": "layers", "items": ["React", "Next.js", "React Native (Expo)", "TypeScript", "Tailwind CSS", "HTML/CSS", "REST API integration", "Responsive design"] },
+    { "category": "Deployment & Tools", "icon": "gears", "items": ["Docker", "FastAPI", "Streamlit", "MLOps", "Flask", "Git/GitHub", "CI/CD", "Linux", "Power BI"] },
+    { "category": "Databases", "icon": "database", "items": ["Oracle", "PostgreSQL", "MySQL", "MongoDB", "Elasticsearch"] }
+  ]
+}

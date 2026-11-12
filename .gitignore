@@ -1,10 +1,12 @@
 node_modules
 .next
 out
-.env*
+.vercel
+.env
+.env.*
 !.env.example
 *.tsbuildinfo
-*.log
-.vercel
-playwright-report
-test-results
+next-env.d.ts
+.DS_Store
+npm-debug.log*
+.claude

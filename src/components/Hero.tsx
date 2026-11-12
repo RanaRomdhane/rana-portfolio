@@ -1,0 +1,211 @@
+"use client";
+
+import dynamic from "next/dynamic";
+import Image from "next/image";
+import { useEffect, useState } from "react";
+import { motion } from "motion/react";
+import { FaDownload, FaGithub, FaLinkedin, FaLocationDot, FaPlay, FaRobot } from "react-icons/fa6";
+import { data } from "@/lib/data";
+import { useGame } from "./GameProvider";
+
+const HeroScene = dynamic(() => import("./HeroScene"), { ssr: false });
+
+const { profile } = data;
+
+const POWER_UPS = [
+  { id: "acc", big: "96.81%", text: "accuracy reading 14 compound emotions with a fine-tuned vision-language model" },
+  { id: "paper", big: "1st author", text: "of a paper at the COC 2026 international conference" },
+  { id: "xp", big: "3 quests", text: "completed as an AI and data intern across Tunisia" },
+  { id: "cert", big: "4 badges", text: "earned from NVIDIA, IBM and Cisco" },
+];
+
+function useTyped(words: string[]) {
+  const [text, setText] = useState(words[0]);
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    let word = 0;
+    let len = words[0].length;
+    let dir = -1;
+    let timer: number;
+    const tick = () => {
+      const current = words[word];
+      len += dir;
+      setText(current.slice(0, len));
+      let wait = dir > 0 ? 60 : 28;
+      if (dir > 0 && len === current.length) {
+        dir = -1;
+        wait = 1900;
+      } else if (dir < 0 && len === 0) {
+        dir = 1;
+        word = (word + 1) % words.length;
+        wait = 250;
+      }
+      timer = window.setTimeout(tick, wait);
+    };
+    timer = window.setTimeout(tick, 2200);
+    return () => window.clearTimeout(timer);
+  }, [words]);
+  return text;
+}
+
+function MysteryBlock({ item, onOpen, opened }: { item: (typeof POWER_UPS)[number]; onOpen: () => void; opened: boolean }) {
+  const [bump, setBump] = useState(0);
+  return (
+    <button
+      type="button"
+      key={bump}
+      className={`mystery ${opened ? "opened" : ""} ${bump ? "bump" : ""}`}
+      aria-label={opened ? `Opened: ${item.big} ${item.text}` : "Mystery block, hit to reveal a fact"}
+      onClick={() => {
+        setBump((b) => b + 1);
+        onOpen();
+      }}
+    >
+      {opened ? "★" : "?"}
+      {bump > 0 && <span aria-hidden className="coin-pop" />}
+    </button>
+  );
+}
+
+export function Hero() {
+  const { theme, award, play } = useGame();
+  const role = useTyped(profile.roles);
+  const [opened, setOpened] = useState<string[]>([]);
+  const [shown, setShown] = useState<string | null>(null);
+  const current = POWER_UPS.find((p) => p.id === shown);
+
+  const hit = (id: string) => {
+    setShown(id);
+    if (!opened.includes(id)) {
+      setOpened((o) => [...o, id]);
+      if (!award(`block:${id}`, 5)) play("bump");
+      else play("coin");
+      if (opened.length + 1 === POWER_UPS.length) award("blocks:all", 30, "Block breaker!", "All mystery blocks opened · +30 coins");
+    } else {
+      play("bump");
+    }
+  };
+
+  return (
+    <section
+      id="home"
+      aria-label="Introduction"
+      className="relative flex min-h-[100svh] items-center overflow-hidden px-4 pb-24 pt-28"
+      style={{
+        background:
+          theme === "dark"
+            ? "radial-gradient(ellipse at 70% 40%, #1b2a66 0%, #0a0f22 62%)"
+            : "linear-gradient(180deg, #bfe9e2 0%, #f6f0df 78%)",
+      }}
+    >
+      <HeroScene theme={theme} />
+
+      {theme === "light" && (
+        <div aria-hidden className="pointer-events-none absolute inset-x-0 top-24 h-40 overflow-hidden opacity-80">
+          {[0, 1, 2].map((i) => (
+            <span
+              key={i}
+              className="absolute h-6 w-24 bg-white shadow-[24px_-12px_0_0_#fff,48px_0_0_0_#fff]"
+              style={{ top: 12 + i * 44, animation: `cloud ${46 + i * 14}s linear ${-i * 17}s infinite` }}
+            />
+          ))}
+        </div>
+      )}
+
+      <div className="relative z-10 mx-auto grid w-full max-w-6xl items-center gap-12 lg:grid-cols-[1.15fr_0.85fr]">
+        <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+          <p className="hud-text mb-5 inline-flex items-center gap-3 border-[3px] border-line bg-card px-3 py-2 shadow-[4px_4px_0_var(--shade)]">
+            <span className="h-2.5 w-2.5 animate-pulse bg-teal" aria-hidden />
+            Player 1 ready
+          </p>
+          <h1 className="font-display text-[clamp(2.8rem,8vw,5.4rem)] font-bold leading-[0.95]">
+            Rana <span className="text-teal">Romdhane</span>
+          </h1>
+          <p className="caret mt-4 min-h-[2.2em] font-display text-2xl font-semibold text-gold sm:text-3xl" aria-label={profile.roles.join(", ")}>
+            <span aria-hidden>{role}</span>
+          </p>
+          <p className="mt-3 max-w-xl text-lg text-muted">{profile.tagline}</p>
+          <p className="mt-3 flex items-center gap-2 text-muted">
+            <FaLocationDot aria-hidden className="text-coral" /> {profile.location}
+          </p>
+
+          <div className="mt-7 flex flex-wrap gap-3">
+            <a href="#about" className="btn btn-gold" onClick={() => play("open")}>
+              <FaPlay aria-hidden /> Start the quest
+            </a>
+            <a href="#assistant" className="btn btn-teal" onClick={() => play("click")}>
+              <FaRobot aria-hidden /> Talk to my AI twin
+            </a>
+            <a
+              href={profile.resume}
+              download
+              className="btn"
+              onClick={() => award("resume", 20, "Loot collected!", "CV downloaded · +20 coins")}
+            >
+              <FaDownload aria-hidden /> Download CV
+            </a>
+          </div>
+
+          <div className="mt-5 flex gap-3">
+            <a href={profile.github} target="_blank" rel="noopener noreferrer" className="btn btn-icon" aria-label="GitHub profile">
+              <FaGithub aria-hidden />
+            </a>
+            <a href={profile.linkedin} target="_blank" rel="noopener noreferrer" className="btn btn-icon" aria-label="LinkedIn profile">
+              <FaLinkedin aria-hidden />
+            </a>
+          </div>
+        </motion.div>
+
+        <motion.div
+          className="mx-auto w-full max-w-sm"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6, delay: 0.15 }}
+        >
+          <div className="float-slow">
+            <div className="pixel-card relative overflow-hidden p-2" style={{ borderColor: "var(--gold)" }}>
+              <Image
+                src={profile.photo}
+                alt="Pixel art portrait of Rana Romdhane wearing gold glasses"
+                width={640}
+                height={640}
+                priority
+                sizes="(max-width: 1024px) 80vw, 384px"
+                className="pixelated block h-auto w-full"
+              />
+              <div className="flex items-center justify-between gap-2 px-2 pb-1 pt-3">
+                <span className="hud-text text-teal">Class: AI/ML Engineer</span>
+                <span className="hud-text flex items-center gap-1 text-coral" aria-label="Full health">
+                  ♥♥♥
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-8">
+            <div className="flex justify-center gap-4">
+              {POWER_UPS.map((p) => (
+                <MysteryBlock key={p.id} item={p} opened={opened.includes(p.id)} onOpen={() => hit(p.id)} />
+              ))}
+            </div>
+            <p aria-live="polite" className="mx-auto mt-4 min-h-[4.2em] max-w-xs text-center text-[0.95rem]">
+              {current ? (
+                <>
+                  <b className="font-display text-xl text-gold">{current.big}</b>
+                  <br />
+                  <span className="text-muted">{current.text}</span>
+                </>
+              ) : (
+                <span className="hud-text text-muted">▲ Hit a block to reveal a fact</span>
+              )}
+            </p>
+          </div>
+        </motion.div>
+      </div>
+
+      <a href="#about" aria-label="Scroll to About" className="hud-text absolute bottom-16 left-1/2 hidden -translate-x-1/2 text-muted lg:block" style={{ animation: "bob 1.6s ease-in-out infinite" }}>
+        ▼ Scroll
+      </a>
+    </section>
+  );
+}
