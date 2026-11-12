@@ -119,7 +119,7 @@ export const SECTIONS = [
 ] as const;
 
 export const SITE_URL = (
-  process.env.NEXT_PUBLIC_SITE_URL || "https://rana-portfolio-wheat.vercel.app"
+  process.env.NEXT_PUBLIC_SITE_URL || "https://rana-romdhane-portfolio.vercel.app"
 ).replace(/\/$/, "");
 
 /** Everything the AI assistant is allowed to know, built from the same JSON as the site. */
