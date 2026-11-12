@@ -218,7 +218,7 @@ export function Contact() {
   };
 
   return (
-    <Section id="contact" level={9} kicker="Final stage" title="Let's team up" intro="Have a role, a project or a question? Send a message and it lands straight in my inbox." tiled>
+    <Section id="contact" level={9} kicker="Final stage" title="Let's team up" model="heart" intro="Have a role, a project or a question? Send a message and it lands straight in my inbox." tiled>
       <div className="grid gap-8 lg:grid-cols-[1.25fr_0.75fr]">
         <Reveal>
           {state === "sent" ? (

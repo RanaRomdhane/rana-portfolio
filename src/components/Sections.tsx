@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { animate, motion, useInView } from "motion/react";
 import { FaArrowUpRightFromSquare, FaCertificate, FaCheck, FaGraduationCap, FaLocationDot, FaScroll, FaTrophy } from "react-icons/fa6";
@@ -41,12 +40,12 @@ function StatTile({ stat }: { stat: Stat }) {
 
 export function About() {
   return (
-    <Section id="about" level={2} kicker="Character sheet" title="Meet the player" intro="Engineer by training, researcher by curiosity, builder by habit.">
+    <Section id="about" level={2} kicker="Character sheet" title="Meet the player" model="gem" intro="Engineer by training, researcher by curiosity, builder by habit.">
       <div className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr]">
         <Reveal>
           <div className="pixel-card p-5">
-            <div className="flex items-center gap-4">
-              <Image src={profile.photo} alt="" width={96} height={96} className="pixelated h-24 w-24 border-[3px] border-gold" />
+            <div className="accent-gold flex items-center gap-4">
+              <Monogram name={profile.name} size={84} />
               <div>
                 <p className="font-display text-2xl font-bold leading-tight">{profile.name}</p>
                 <p className="text-teal">{profile.title}</p>
@@ -119,7 +118,7 @@ export function Experience() {
   const { play } = useGame();
   const [openId, setOpenId] = useState<string>(experience[0].id);
   return (
-    <Section id="experience" level={3} kicker="Quest log" title="Experience" intro="Three quests completed so far. Open one to see the objectives I cleared." tiled>
+    <Section id="experience" level={3} kicker="Quest log" title="Experience" model="sword" intro="Three quests completed so far. Open one to see the objectives I cleared." tiled>
       <ol className="relative space-y-6 border-l-[5px] border-dashed border-line pl-7 sm:pl-10">
         {experience.map((e, i) => {
           const open = openId === e.id;
@@ -199,7 +198,7 @@ export function Experience() {
 export function Publications() {
   const { award } = useGame();
   return (
-    <Section id="publications" level={5} kicker="Legendary scrolls" title="Publications" intro="Research and writing with my name on it." tiled>
+    <Section id="publications" level={5} kicker="Legendary scrolls" title="Publications" model="trophy" intro="Research and writing with my name on it." tiled>
       <div className="grid gap-6 lg:grid-cols-2">
         {publications.map((p, i) => (
           <Reveal key={p.id} delay={i * 0.1}>
@@ -249,7 +248,7 @@ export function Publications() {
 
 export function Education() {
   return (
-    <Section id="education" level={6} kicker="Training grounds" title="Education and badges" intro="Where I levelled up, and the badges I picked up along the way.">
+    <Section id="education" level={6} kicker="Training grounds" title="Education and badges" model="cap" intro="Where I levelled up, and the badges I picked up along the way.">
       <div className="grid gap-6 md:grid-cols-2">
         {education.map((e, i) => (
           <Reveal key={e.id} delay={i * 0.1}>
@@ -312,7 +311,7 @@ export function Skills() {
   const marquee = skills.flatMap((s) => s.items);
 
   return (
-    <Section id="skills" level={7} kicker="Inventory" title="Skills" intro="Pick a bag to see what is inside." tiled>
+    <Section id="skills" level={7} kicker="Inventory" title="Skills" model="chest" intro="Pick a bag to see what is inside." tiled>
       <div role="tablist" aria-label="Skill categories" className="mb-6 flex flex-wrap gap-2.5">
         {skills.map((s, i) => (
           <button

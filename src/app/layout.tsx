@@ -42,13 +42,11 @@ export const metadata: Metadata = {
     title: `${profile.name} | ${profile.title}`,
     description,
     siteName: `${profile.name} Portfolio`,
-    images: [{ url: profile.photo, width: 1024, height: 1024, alt: `Pixel art portrait of ${profile.name}` }],
   },
   twitter: {
     card: "summary",
     title: `${profile.name} | ${profile.title}`,
     description,
-    images: [profile.photo],
   },
   robots: { index: true, follow: true },
 };
@@ -69,7 +67,6 @@ const jsonLd = {
   name: profile.name,
   jobTitle: profile.title,
   url: SITE_URL,
-  image: `${SITE_URL}${profile.photo}`,
   email: `mailto:${profile.email}`,
   address: { "@type": "PostalAddress", addressLocality: "Ariana", addressCountry: "TN" },
   alumniOf: data.education.map((e) => ({ "@type": "CollegeOrUniversity", name: e.school })),

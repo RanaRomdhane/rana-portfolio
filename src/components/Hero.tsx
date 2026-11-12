@@ -1,7 +1,6 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import Image from "next/image";
 import { useEffect, useState } from "react";
 import { motion } from "motion/react";
 import { FaDownload, FaGithub, FaLinkedin, FaLocationDot, FaPlay, FaRobot } from "react-icons/fa6";
@@ -9,6 +8,7 @@ import { data } from "@/lib/data";
 import { useGame } from "./GameProvider";
 
 const HeroScene = dynamic(() => import("./HeroScene"), { ssr: false });
+const Voxel = dynamic(() => import("./Voxel"), { ssr: false });
 
 const { profile } = data;
 
@@ -162,27 +162,20 @@ export function Hero() {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6, delay: 0.15 }}
         >
-          <div className="float-slow">
-            <div className="pixel-card relative overflow-hidden p-2" style={{ borderColor: "var(--gold)" }}>
-              <Image
-                src={profile.photo}
-                alt="Pixel art portrait of Rana Romdhane wearing gold glasses"
-                width={640}
-                height={640}
-                priority
-                sizes="(max-width: 1024px) 80vw, 384px"
-                className="pixelated block h-auto w-full"
-              />
-              <div className="flex items-center justify-between gap-2 px-2 pb-1 pt-3">
-                <span className="hud-text text-teal">Class: AI/ML Engineer</span>
-                <span className="hud-text flex items-center gap-1 text-coral" aria-label="Full health">
-                  ♥♥♥
-                </span>
-              </div>
-            </div>
+          <div className="relative mx-auto grid place-items-center">
+            <Voxel
+              model="robot"
+              size={330}
+              className="max-w-full"
+              onPoke={() => {
+                play("bump");
+                award("poke:robot", 15, "Beep boop!", "You poked the robot · +15 coins");
+              }}
+            />
+            <p className="hud-text mt-1 text-center text-muted">Drag to spin · Click to burst</p>
           </div>
 
-          <div className="mt-8">
+          <div className="mt-6">
             <div className="flex justify-center gap-4">
               {POWER_UPS.map((p) => (
                 <MysteryBlock key={p.id} item={p} opened={opened.includes(p.id)} onOpen={() => hit(p.id)} />

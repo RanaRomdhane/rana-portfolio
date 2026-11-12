@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { FaMicrophone, FaPaperPlane, FaStop, FaVolumeHigh, FaVolumeXmark } from "react-icons/fa6";
+import { FaArrowUpRightFromSquare, FaEnvelope, FaFilePdf, FaGithub, FaLinkedin, FaMicrophone, FaPaperPlane, FaStop, FaVolumeHigh, FaVolumeXmark } from "react-icons/fa6";
 import { data } from "@/lib/data";
 import { useGame } from "./GameProvider";
 import { Reveal, Section } from "./Section";
@@ -31,6 +31,66 @@ const STATUS_LABEL: Record<Status, string> = {
 };
 // A few milliseconds of silence, used to unlock audio playback on the first tap (needed on iPhone).
 const SILENCE = "data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=";
+
+const LINK = /(https?:\/\/[^\s<>"']+|[\w.+-]+@[\w-]+\.[\w.-]+)/g;
+
+function splitTail(raw: string): [string, string] {
+  const m = raw.match(/[.,;:!?)\]]+$/);
+  return m ? [raw.slice(0, -m[0].length), m[0]] : [raw, ""];
+}
+
+function linkLabel(url: string) {
+  if (!url.startsWith("http")) return { text: url, Icon: FaEnvelope };
+  try {
+    const u = new URL(url);
+    const host = u.hostname.replace(/^www\./, "");
+    const last = decodeURIComponent(u.pathname.split("/").filter(Boolean).pop() || "");
+    if (/\.pdf$/i.test(last)) return { text: "Read the paper (PDF)", Icon: FaFilePdf };
+    if (host === "github.com") return { text: last ? `GitHub: ${last}` : "GitHub", Icon: FaGithub };
+    if (host.endsWith("linkedin.com")) return { text: "LinkedIn profile", Icon: FaLinkedin };
+    return { text: host, Icon: FaArrowUpRightFromSquare };
+  } catch {
+    return { text: "Open link", Icon: FaArrowUpRightFromSquare };
+  }
+}
+
+/** Shows a reply with links turned into tidy buttons instead of long raw addresses. */
+function RichText({ text }: { text: string }) {
+  return (
+    <>
+      {text.split(LINK).map((part, i) => {
+        if (i % 2 === 0) return part;
+        const [url, tail] = splitTail(part);
+        const { text: label, Icon } = linkLabel(url);
+        return (
+          <span key={i}>
+            <a
+              href={url.startsWith("http") ? url : `mailto:${url}`}
+              target={url.startsWith("http") ? "_blank" : undefined}
+              rel="noopener noreferrer"
+              className="mx-0.5 my-1 inline-flex max-w-full items-center gap-2 border-2 border-teal bg-card px-2.5 py-1 align-middle text-[0.92rem] font-semibold text-teal hover:bg-teal hover:text-[var(--on-accent)]"
+            >
+              <Icon aria-hidden className="shrink-0" />
+              <span className="truncate">{label}</span>
+            </a>
+            {tail}
+          </span>
+        );
+      })}
+    </>
+  );
+}
+
+/** What the voice says: the same reply without web addresses or emails. */
+function speechText(text: string) {
+  return text
+    .replace(LINK, (m) => splitTail(m)[1])
+    .replace(/\s*[:,(]\s*([.!?])/g, "$1")
+    .replace(/\s+([.,!?])/g, "$1")
+    .replace(/\s{2,}/g, " ")
+    .replace(/\s*[:,(]\s*$/, ".")
+    .trim();
+}
 
 export function Assistant() {
   const { award, play } = useGame();
@@ -174,7 +234,8 @@ export function Assistant() {
         setMessages((m) => [...m.slice(0, -1), { role: "assistant", content: snapshot }]);
       }
       if (!answer.trim()) throw new Error("I lost my train of thought. Could you ask again?");
-      if (voiceRef.current) await speak(answer, ctrl.signal);
+      const spoken = speechText(answer);
+      if (voiceRef.current && spoken) await speak(spoken, ctrl.signal);
       else setStatus("idle");
     } catch (e) {
       if ((e as Error).name === "AbortError") return;
@@ -305,12 +366,14 @@ export function Assistant() {
                 <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
                   <div
                     dir="auto"
-                    className={`max-w-[85%] whitespace-pre-wrap border-[3px] px-4 py-2.5 ${
+                    className={`max-w-[85%] whitespace-pre-wrap break-words border-[3px] px-4 py-2.5 ${
                       m.role === "user" ? "border-[#171b33] bg-gold text-[#171b33]" : "border-line bg-bg2"
                     }`}
                   >
                     <span className="sr-only">{m.role === "user" ? "You: " : "Rana's AI: "}</span>
-                    {m.content || (
+                    {m.content ? (
+                      m.role === "assistant" ? <RichText text={m.content} /> : m.content
+                    ) : (
                       <span aria-label="Thinking" className="flex gap-1.5 py-2">
                         {[0, 1, 2].map((d) => (
                           <span key={d} className="h-2.5 w-2.5 bg-teal" style={{ animation: `bob 0.7s ease-in-out ${d * 0.14}s infinite` }} />

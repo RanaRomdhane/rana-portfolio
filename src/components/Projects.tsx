@@ -138,7 +138,7 @@ export function Projects() {
   };
 
   return (
-    <Section id="projects" level={4} kicker="World map" title="Projects" intro="Choose a world to explore. Filter by domain or search for a tool.">
+    <Section id="projects" level={4} kicker="World map" title="Projects" model="globe" intro="Choose a world to explore. Filter by domain or search for a tool.">
       <div className="mb-7 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <div role="group" aria-label="Filter projects by domain" className="flex flex-wrap gap-2.5">
           {FILTERS.map((f) => (
