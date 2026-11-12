@@ -23,37 +23,37 @@
 /* Night world (default) */
 :root,
 :root[data-theme="dark"] {
-  --bg: #0a0f22;
-  --bg2: #101833;
-  --card: #151e3f;
-  --ink: #eef3ff;
-  --muted: #a3afd0;
-  --line: #34427a;
-  --teal: #3fd9c4;
-  --gold: #ffcb47;
-  --coral: #ff7d6e;
-  --denim: #7ea2ee;
-  --shade: #04060f;
-  --on-accent: #0a0f22;
-  --tile: rgba(63, 217, 196, 0.07);
+  --bg: #1b0d2e;
+  --bg2: #25123f;
+  --card: #2e1850;
+  --ink: #fff3fa;
+  --muted: #cdb4dc;
+  --line: #5a3a8a;
+  --teal: #ff8ec9;
+  --gold: #ffd257;
+  --coral: #ff6b8b;
+  --denim: #8fd8ff;
+  --shade: #0d0518;
+  --on-accent: #1b0d2e;
+  --tile: rgba(255, 142, 201, 0.08);
   color-scheme: dark;
 }
 
 /* Day world */
 :root[data-theme="light"] {
-  --bg: #f6f0df;
-  --bg2: #e4f3ee;
-  --card: #fffcf2;
-  --ink: #171b33;
-  --muted: #525b7c;
-  --line: #171b33;
-  --teal: #0f8f80;
-  --gold: #e0a000;
-  --coral: #dc4f3f;
-  --denim: #3d63b8;
-  --shade: #171b33;
-  --on-accent: #fffcf2;
-  --tile: rgba(15, 143, 128, 0.1);
+  --bg: #fff1f7;
+  --bg2: #ffe1ee;
+  --card: #fffafc;
+  --ink: #3a1245;
+  --muted: #7a5682;
+  --line: #3a1245;
+  --teal: #d6338a;
+  --gold: #d99a00;
+  --coral: #e0345f;
+  --denim: #2f7fc4;
+  --shade: #3a1245;
+  --on-accent: #fffafc;
+  --tile: rgba(214, 51, 138, 0.08);
   color-scheme: light;
 }
 
@@ -66,15 +66,15 @@ body {
   background: var(--bg);
   color: var(--ink);
   font-family: var(--font-sans);
-  font-size: 17px;
-  line-height: 1.65;
+  font-size: 17.5px;
+  line-height: 1.8;
   overflow-x: hidden;
   transition: background-color 0.4s ease, color 0.4s ease;
 }
 
 ::selection {
   background: var(--gold);
-  color: #171b33;
+  color: #3a1245;
 }
 
 :focus-visible {
@@ -131,8 +131,8 @@ body {
 }
 .btn-gold {
   background: var(--gold);
-  color: #171b33;
-  border-color: #171b33;
+  color: #3a1245;
+  border-color: #3a1245;
 }
 .btn-teal {
   background: var(--teal);
@@ -179,6 +179,18 @@ body {
   background-position: 0 0, 16px 16px;
 }
 
+/* Castle wall top edge on tiled sections */
+.battlement::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -19px;
+  height: 16px;
+  background: repeating-linear-gradient(90deg, var(--line) 0 28px, transparent 28px 56px);
+  pointer-events: none;
+}
+
 .pixelated {
   image-rendering: pixelated;
 }
@@ -192,9 +204,9 @@ body {
   place-items: center;
   font-family: var(--font-hud);
   font-size: 1.5rem;
-  color: #171b33;
+  color: #3a1245;
   background: var(--gold);
-  border: 4px solid #171b33;
+  border: 4px solid #3a1245;
   box-shadow: inset -6px -6px 0 rgba(0, 0, 0, 0.18), inset 6px 6px 0 rgba(255, 255, 255, 0.35), 5px 5px 0 var(--shade);
   cursor: pointer;
   animation: bob 2.4s ease-in-out infinite;
@@ -205,7 +217,7 @@ body {
   position: absolute;
   width: 6px;
   height: 6px;
-  background: #171b33;
+  background: #3a1245;
   top: 6px;
 }
 .mystery::before { left: 6px; }
@@ -230,7 +242,7 @@ body {
   margin-left: -11px;
   border-radius: 50%;
   background: var(--gold);
-  border: 3px solid #171b33;
+  border: 3px solid #3a1245;
   pointer-events: none;
   animation: coin-pop 0.7s ease-out forwards;
 }
@@ -283,6 +295,10 @@ body {
 @keyframes eq {
   0%, 100% { height: 20%; }
   50% { height: 100%; }
+}
+@keyframes confetti {
+  from { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+  to { transform: translateY(900px) rotate(540deg); opacity: 0.2; }
 }
 @keyframes cloud {
   from { transform: translateX(-20vw); }

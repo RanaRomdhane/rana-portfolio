@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { FaArrowUpRightFromSquare, FaEnvelope, FaFilePdf, FaGithub, FaLinkedin, FaMicrophone, FaPaperPlane, FaStop, FaVolumeHigh, FaVolumeXmark } from "react-icons/fa6";
 import { data } from "@/lib/data";
@@ -303,16 +302,17 @@ export function Assistant() {
   };
 
   return (
-    <Section id="assistant" level={8} kicker="Boss room" title="Talk to my AI twin" intro="She knows my whole CV and answers in my own voice. Ask anything about my work.">
-      <div className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr]">
+    <Section id="assistant" level={8} kicker="Throne room" title="Talk to my AI twin" model="robot" intro="She knows my whole CV and answers in my own voice. Ask anything about my work.">
+      <div className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
         {/* Avatar: portrait and talking clip stacked, cross-fading over 700ms */}
         <Reveal>
           <div className="pixel-card mx-auto max-w-sm p-3" style={{ borderColor: speaking ? "var(--gold)" : undefined }}>
-            <div className="scanlines relative aspect-square overflow-hidden border-[3px] border-line bg-bg2">
+            <div className="relative aspect-square overflow-hidden border-[3px] border-line bg-black">
               {profile.idleVideo ? (
-                <video src={profile.idleVideo} poster={profile.photo} autoPlay muted loop playsInline aria-hidden className="absolute inset-0 h-full w-full object-cover" />
+                <video src={profile.idleVideo} autoPlay muted loop playsInline aria-hidden className="absolute inset-0 h-full w-full object-cover" />
               ) : (
-                <Image src={profile.photo} alt="Rana's AI twin, a pixel art portrait" fill sizes="(max-width: 1024px) 90vw, 380px" className="pixelated breathe object-cover" />
+                /* resting pose: the same clip, held on its first frame */
+                <video src={`${profile.talkingVideo}#t=0.1`} muted playsInline preload="auto" aria-label="Rana's AI twin" className="breathe absolute inset-0 h-full w-full object-cover" />
               )}
               <video
                 ref={videoRef}
@@ -360,14 +360,14 @@ export function Assistant() {
 
         {/* Chat */}
         <Reveal delay={0.1}>
-          <div className="pixel-card flex h-[560px] max-h-[78svh] flex-col">
-            <div ref={listRef} role="log" aria-live="polite" aria-label="Conversation" tabIndex={0} className="scroll-thin flex-1 space-y-4 overflow-y-auto p-4 sm:p-5">
+          <div className="pixel-card flex h-[620px] max-h-[80svh] flex-col">
+            <div ref={listRef} role="log" aria-live="polite" aria-label="Conversation" tabIndex={0} className="scroll-thin flex-1 space-y-6 overflow-y-auto p-5 sm:p-7">
               {messages.map((m, i) => (
                 <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
                   <div
                     dir="auto"
-                    className={`max-w-[85%] whitespace-pre-wrap break-words border-[3px] px-4 py-2.5 ${
-                      m.role === "user" ? "border-[#171b33] bg-gold text-[#171b33]" : "border-line bg-bg2"
+                    className={`max-w-[85%] whitespace-pre-wrap break-words border-[3px] px-5 py-3.5 leading-relaxed ${
+                      m.role === "user" ? "border-[#3a1245] bg-gold text-[#3a1245]" : "border-line bg-bg2"
                     }`}
                   >
                     <span className="sr-only">{m.role === "user" ? "You: " : "Rana's AI: "}</span>
@@ -414,7 +414,7 @@ export function Assistant() {
                 disabled={busy}
                 aria-pressed={status === "listening"}
                 aria-label={status === "listening" ? "Stop recording and send" : "Ask with your voice"}
-                className={`btn btn-icon h-12 w-12 shrink-0 ${status === "listening" ? "!bg-coral !text-[#171b33]" : ""}`}
+                className={`btn btn-icon h-12 w-12 shrink-0 ${status === "listening" ? "!bg-coral !text-[#3a1245]" : ""}`}
               >
                 {status === "listening" ? <FaStop aria-hidden /> : <FaMicrophone aria-hidden />}
               </button>

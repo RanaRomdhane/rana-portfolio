@@ -90,12 +90,12 @@ export function Hero() {
     <section
       id="home"
       aria-label="Introduction"
-      className="relative flex min-h-[100svh] items-center overflow-hidden px-4 pb-24 pt-28"
+      className="relative flex min-h-[100svh] items-center overflow-hidden px-5 pb-32 pt-32"
       style={{
         background:
           theme === "dark"
-            ? "radial-gradient(ellipse at 70% 40%, #1b2a66 0%, #0a0f22 62%)"
-            : "linear-gradient(180deg, #bfe9e2 0%, #f6f0df 78%)",
+            ? "radial-gradient(ellipse at 70% 40%, #4a1f7a 0%, #1b0d2e 62%)"
+            : "linear-gradient(180deg, #bfe6ff 0%, #ffd9ea 55%, #fff1f7 100%)",
       }}
     >
       <HeroScene theme={theme} />
@@ -112,7 +112,7 @@ export function Hero() {
         </div>
       )}
 
-      <div className="relative z-10 mx-auto grid w-full max-w-6xl items-center gap-12 lg:grid-cols-[1.15fr_0.85fr]">
+      <div className="relative z-10 mx-auto grid w-full max-w-6xl items-center gap-16 lg:grid-cols-[1.1fr_0.9fr]">
         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
           <p className="hud-text mb-5 inline-flex items-center gap-3 border-[3px] border-line bg-card px-3 py-2 shadow-[4px_4px_0_var(--shade)]">
             <span className="h-2.5 w-2.5 animate-pulse bg-teal" aria-hidden />
@@ -124,12 +124,12 @@ export function Hero() {
           <p className="caret mt-4 min-h-[2.2em] font-display text-2xl font-semibold text-gold sm:text-3xl" aria-label={profile.roles.join(", ")}>
             <span aria-hidden>{role}</span>
           </p>
-          <p className="mt-3 max-w-xl text-lg text-muted">{profile.tagline}</p>
+          <p className="mt-5 max-w-xl text-xl leading-relaxed text-muted">{profile.tagline}</p>
           <p className="mt-3 flex items-center gap-2 text-muted">
             <FaLocationDot aria-hidden className="text-coral" /> {profile.location}
           </p>
 
-          <div className="mt-7 flex flex-wrap gap-3">
+          <div className="mt-9 flex flex-wrap gap-4">
             <a href="#about" className="btn btn-gold" onClick={() => play("open")}>
               <FaPlay aria-hidden /> Start the quest
             </a>
@@ -164,12 +164,12 @@ export function Hero() {
         >
           <div className="relative mx-auto grid place-items-center">
             <Voxel
-              model="robot"
+              model="crown"
               size={330}
               className="max-w-full"
               onPoke={() => {
                 play("bump");
-                award("poke:robot", 15, "Beep boop!", "You poked the robot · +15 coins");
+                award("poke:crown", 15, "Royal treasure!", "You found the crown · +15 coins");
               }}
             />
             <p className="hud-text mt-1 text-center text-muted">Drag to spin · Click to burst</p>

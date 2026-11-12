@@ -4,7 +4,10 @@ import { useEffect, useRef, useState } from "react";
 import { FaBug, FaDownload, FaEnvelope, FaGithub, FaLinkedin, FaPaperPlane } from "react-icons/fa6";
 import { data } from "@/lib/data";
 import { useGame } from "./GameProvider";
+import dynamic from "next/dynamic";
 import { Reveal, Section } from "./Section";
+
+const Voxel = dynamic(() => import("./Voxel"), { ssr: false });
 
 const { profile } = data;
 const FORM_ENDPOINT = "https://formspree.io/f/mljdopbw";
@@ -61,7 +64,7 @@ export function BugHunt() {
   };
 
   return (
-    <section aria-labelledby="bonus-title" className="px-4 py-16">
+    <section aria-labelledby="bonus-title" className="px-5 pb-28 pt-6">
       <Reveal className="mx-auto max-w-3xl">
         <div className="pixel-card grid items-center gap-6 p-5 sm:grid-cols-[1fr_auto] sm:p-7" style={{ borderColor: "var(--coral)" }}>
           <div>
@@ -219,7 +222,7 @@ export function Contact() {
 
   return (
     <Section id="contact" level={9} kicker="Final stage" title="Let's team up" model="heart" intro="Have a role, a project or a question? Send a message and it lands straight in my inbox." tiled>
-      <div className="grid gap-8 lg:grid-cols-[1.25fr_0.75fr]">
+      <div className="grid gap-12 lg:grid-cols-[1.25fr_0.75fr] lg:gap-16">
         <Reveal>
           {state === "sent" ? (
             <div className="pixel-card p-8 text-center" role="status" style={{ borderColor: "var(--teal)" }}>
@@ -231,7 +234,7 @@ export function Contact() {
               </button>
             </div>
           ) : (
-            <form onSubmit={submit} noValidate className="pixel-card grid gap-5 p-5 sm:grid-cols-2 sm:p-7">
+            <form onSubmit={submit} noValidate className="pixel-card grid gap-7 p-6 sm:grid-cols-2 sm:p-10">
               {field("name", "Your name", { required: true, autoComplete: "name" })}
               {field("email", "Your email", { required: true, type: "email", autoComplete: "email" })}
               <div className="sm:col-span-2">{field("subject", "Subject")}</div>
@@ -256,10 +259,10 @@ export function Contact() {
         </Reveal>
 
         <Reveal delay={0.1}>
-          <ul className="space-y-4">
+          <ul className="space-y-6">
             <li>
               <a href={`mailto:${profile.email}`} className="pixel-card lift flex items-center gap-4 p-4">
-                <span className="grid h-12 w-12 shrink-0 place-items-center border-[3px] border-[#171b33] bg-coral text-xl text-[#171b33]">
+                <span className="grid h-12 w-12 shrink-0 place-items-center border-[3px] border-[#3a1245] bg-coral text-xl text-[#3a1245]">
                   <FaEnvelope aria-hidden />
                 </span>
                 <span className="min-w-0">
@@ -270,7 +273,7 @@ export function Contact() {
             </li>
             <li>
               <a href={profile.linkedin} target="_blank" rel="noopener noreferrer" className="pixel-card lift flex items-center gap-4 p-4">
-                <span className="grid h-12 w-12 shrink-0 place-items-center border-[3px] border-[#171b33] bg-denim text-xl text-[#171b33]">
+                <span className="grid h-12 w-12 shrink-0 place-items-center border-[3px] border-[#3a1245] bg-denim text-xl text-[#3a1245]">
                   <FaLinkedin aria-hidden />
                 </span>
                 <span>
@@ -281,7 +284,7 @@ export function Contact() {
             </li>
             <li>
               <a href={profile.github} target="_blank" rel="noopener noreferrer" className="pixel-card lift flex items-center gap-4 p-4">
-                <span className="grid h-12 w-12 shrink-0 place-items-center border-[3px] border-[#171b33] bg-teal text-xl text-[#171b33]">
+                <span className="grid h-12 w-12 shrink-0 place-items-center border-[3px] border-[#3a1245] bg-teal text-xl text-[#3a1245]">
                   <FaGithub aria-hidden />
                 </span>
                 <span>
@@ -302,20 +305,67 @@ export function Contact() {
   );
 }
 
+const RANKS: [number, string, string][] = [
+  [260, "Legend of the Kingdom", "You found nearly everything. Royal-level curiosity!"],
+  [150, "Royal Explorer", "You explored most of the kingdom."],
+  [0, "Brave Visitor", "A fine first run. There are still secrets to find."],
+];
+
+/** The ending screen: the journey finishes at the castle. */
 export function Footer() {
-  const { coins } = useGame();
+  const { coins, play, award } = useGame();
+  const [rank, title, line] = RANKS.find(([min]) => coins >= min) ?? RANKS[2];
+  void rank;
   return (
-    <footer className="px-4 pb-20 pt-12 text-center">
-      <p className="hud-text text-gold">Thanks for playing</p>
-      <p className="mt-3 font-display text-2xl font-bold">
-        You collected <span className="text-gold">{coins}</span> coins on this run.
-      </p>
-      <p className="mt-2 text-muted">
-        © {new Date().getFullYear()} {profile.name}. Designed and built with care in Tunisia.
-      </p>
-      <a href="#home" className="btn mt-6">
-        ▲ Back to the start
-      </a>
+    <footer id="finish" className="relative overflow-hidden border-t-[3px] border-line px-5 pb-36 pt-28 text-center">
+      <div aria-hidden className="pointer-events-none absolute inset-0">
+        {Array.from({ length: 26 }, (_, i) => (
+          <span
+            key={i}
+            className="absolute top-0 block h-3 w-3"
+            style={{
+              left: `${(i * 37) % 100}%`,
+              background: ["var(--teal)", "var(--gold)", "var(--denim)", "var(--coral)"][i % 4],
+              animation: `confetti ${5 + (i % 5)}s linear ${-(i % 7)}s infinite`,
+            }}
+          />
+        ))}
+      </div>
+
+      <Reveal className="relative mx-auto flex max-w-2xl flex-col items-center">
+        <Voxel
+          model="castle"
+          size={300}
+          className="max-w-full"
+          onPoke={() => {
+            play("win");
+            award("poke:castle", 20, "Castle secret!", "You reached the castle · +20 coins");
+          }}
+        />
+        <p className="hud-text mt-6 text-gold">Quest complete</p>
+        <h2 className="mt-4 font-display text-5xl font-bold leading-tight sm:text-6xl">You reached the castle!</h2>
+        <p className="mt-6 font-display text-2xl">
+          Final score: <span className="text-gold">{coins}</span> coins
+        </p>
+        <p className="mt-2 text-xl font-semibold text-teal">{title}</p>
+        <p className="mt-2 text-lg text-muted">{line}</p>
+
+        <div className="mt-10 flex flex-wrap justify-center gap-4">
+          <a href="#contact" className="btn btn-gold px-6 py-3.5 text-lg" onClick={() => play("open")}>
+            <FaPaperPlane aria-hidden /> Send me a message
+          </a>
+          <a href={profile.resume} download className="btn px-6 py-3.5 text-lg" onClick={() => award("resume", 20, "Loot collected!", "CV downloaded · +20 coins")}>
+            <FaDownload aria-hidden /> Download my CV
+          </a>
+          <a href="#home" className="btn px-6 py-3.5 text-lg" onClick={() => play("click")}>
+            ▲ Play again
+          </a>
+        </div>
+
+        <p className="mt-14 text-muted">
+          © {new Date().getFullYear()} {profile.name}. Designed and built with care in Tunisia.
+        </p>
+      </Reveal>
     </footer>
   );
 }

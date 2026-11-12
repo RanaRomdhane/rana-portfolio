@@ -14,7 +14,7 @@ const FILTERS: ("All" | Domain)[] = ["All", "ML", "NLP", "CV", "Web", "Data"];
 /** Cover art: your own image if one is set in the content file, otherwise generated pixel art. */
 function Cover({ project, tall }: { project: Project; tall?: boolean }) {
   return (
-    <div className={`tiles relative overflow-hidden border-b-[3px] border-line ${tall ? "h-48 sm:h-60" : "h-40"}`}>
+    <div className={`tiles relative overflow-hidden border-b-[3px] border-line ${tall ? "h-48 sm:h-60" : "h-48"}`}>
       {project.image ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img src={project.image} alt={`${project.title} preview`} loading="lazy" className="h-full w-full object-cover" />
@@ -23,7 +23,7 @@ function Cover({ project, tall }: { project: Project; tall?: boolean }) {
           <div aria-hidden className="absolute inset-0 opacity-25" style={{ background: "linear-gradient(135deg, var(--accent), transparent 70%)" }} />
           <div aria-hidden className="absolute inset-0 grid place-items-center">
             <span
-              className="grid h-24 w-24 place-items-center border-4 border-[#171b33] text-[#171b33] transition-transform duration-300 group-hover:-translate-y-1.5 group-hover:rotate-3"
+              className="grid h-24 w-24 place-items-center border-4 border-[#3a1245] text-[#3a1245] transition-transform duration-300 group-hover:-translate-y-1.5 group-hover:rotate-3"
               style={{ background: "var(--accent)", boxShadow: "inset -7px -7px 0 rgba(0,0,0,.18), inset 7px 7px 0 rgba(255,255,255,.3), 6px 6px 0 var(--shade)" }}
             >
               <TechIcon name={project.icon} mono size={44} />
@@ -139,8 +139,8 @@ export function Projects() {
 
   return (
     <Section id="projects" level={4} kicker="World map" title="Projects" model="globe" intro="Choose a world to explore. Filter by domain or search for a tool.">
-      <div className="mb-7 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-        <div role="group" aria-label="Filter projects by domain" className="flex flex-wrap gap-2.5">
+      <div className="mb-12 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+        <div role="group" aria-label="Filter projects by domain" className="flex flex-wrap gap-3.5">
           {FILTERS.map((f) => (
             <button
               key={f}
@@ -185,7 +185,7 @@ export function Projects() {
           </button>
         </div>
       ) : (
-        <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <ul className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
           <AnimatePresence mode="popLayout">
             {visible.map((p) => (
               <motion.li
@@ -208,7 +208,7 @@ export function Projects() {
                   className="pixel-card lift group flex h-full w-full flex-col text-left"
                 >
                   <Cover project={p} />
-                  <span className="flex flex-1 flex-col p-4">
+                  <span className="flex flex-1 flex-col p-6">
                     <span className="font-display text-[1.45rem] font-bold leading-tight">{p.title}</span>
                     <span className="mt-2 flex-1 text-[0.97rem] text-muted">{p.short}</span>
                     <span className="mt-4 flex flex-wrap items-center gap-2">

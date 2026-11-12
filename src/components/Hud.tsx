@@ -7,6 +7,7 @@ import { useGame } from "./GameProvider";
 
 function useScrollState() {
   const [active, setActive] = useState<string>("home");
+  const [atEnd, setAtEnd] = useState(false);
   const barRef = useRef<HTMLDivElement>(null);
   const spriteRef = useRef<HTMLDivElement>(null);
 
@@ -25,6 +26,7 @@ function useScrollState() {
         if (el && el.getBoundingClientRect().top <= line) current = s.id;
       }
       setActive(current);
+      setAtEnd(p > 0.965);
     };
     const onScroll = () => {
       if (!raf) raf = requestAnimationFrame(update);
@@ -39,25 +41,25 @@ function useScrollState() {
     };
   }, []);
 
-  return { active, barRef, spriteRef };
+  return { active, atEnd, barRef, spriteRef };
 }
 
-/* Original 10x12 pixel hero, coloured after Rana's portrait. */
+/* Original 10x12 pixel robot that walks the level with you. */
 const SPRITE = [
-  "..KKKKKK..",
-  ".KKKKKKKK.",
-  ".KKSSSSKK.",
-  ".KGEGGEGK.",
-  ".KKSSSSKK.",
-  ".KKKSSKKK.",
-  "..KKKKKK..",
-  ".BBKKKKBB.",
-  ".BBBBBBBB.",
-  ".BBBBBBBB.",
+  "....GG....",
+  "....PP....",
+  ".PPPPPPPP.",
+  ".PKKKKKKP.",
+  ".PKGKKGKP.",
+  ".PKKKKKKP.",
+  ".PKKRRKKP.",
+  ".PPPPPPPP.",
+  "..PPPPPP..",
+  "..BB..BB..",
   "..BB..BB..",
   "..KK..KK..",
 ];
-const SPRITE_COLORS: Record<string, string> = { K: "#1b1b26", S: "#f6c9a8", G: "#f5c451", E: "#3a2a22", B: "#5b7fc4" };
+const SPRITE_COLORS: Record<string, string> = { K: "#2a1038", P: "#ff8ec9", G: "#ffd257", R: "#ff6b8b", B: "#8fd8ff" };
 
 export function PixelRana({ size = 40 }: { size?: number }) {
   return (
@@ -71,9 +73,11 @@ export function PixelRana({ size = 40 }: { size?: number }) {
 
 export function Hud() {
   const { theme, toggleTheme, sound, toggleSound, coins, play } = useGame();
-  const { active, barRef, spriteRef } = useScrollState();
+  const { active, atEnd, barRef, spriteRef } = useScrollState();
   const [open, setOpen] = useState(false);
-  const level = Math.max(1, SECTIONS.findIndex((s) => s.id === active) + 1);
+  const index = Math.max(0, SECTIONS.findIndex((s) => s.id === active));
+  const level = index + 1;
+  const nextStop = SECTIONS[index + 1] ?? { id: "finish", label: "Finish line" };
 
   useEffect(() => {
     if (!open) return;
@@ -87,7 +91,7 @@ export function Hud() {
       <header className="fixed inset-x-0 top-0 z-50 border-b-[3px] border-line bg-bg/90 backdrop-blur-sm">
         <div className="mx-auto flex h-16 max-w-7xl items-center gap-3 px-4">
           <a href="#home" className="flex items-center gap-2" aria-label="Rana Romdhane, back to top" onClick={() => play("click")}>
-            <span className="grid h-10 w-10 place-items-center border-[3px] border-[#171b33] bg-gold font-hud text-[0.7rem] text-[#171b33] shadow-[3px_3px_0_var(--shade)]">
+            <span className="grid h-10 w-10 place-items-center border-[3px] border-[#3a1245] bg-gold font-hud text-[0.7rem] text-[#3a1245] shadow-[3px_3px_0_var(--shade)]">
               RR
             </span>
             <span className="hidden font-display text-xl font-bold sm:block">Rana.quest</span>
@@ -117,7 +121,7 @@ export function Hud() {
               LV <b className="text-teal">{level}</b>/{SECTIONS.length}
             </span>
             <span className="hud-text flex items-center gap-2 border-[3px] border-line bg-card px-2.5 py-2" aria-label={`${coins} coins collected`} title="Coins you collected by exploring">
-              <span aria-hidden className="inline-block h-3.5 w-3.5 rounded-full border-2 border-[#171b33] bg-gold" />
+              <span aria-hidden className="inline-block h-3.5 w-3.5 rounded-full border-2 border-[#3a1245] bg-gold" />
               <span key={coins} style={{ animation: "bump 0.3s ease-out" }} className="inline-block min-w-[2ch] text-gold">
                 {coins}
               </span>
@@ -169,6 +173,21 @@ export function Hud() {
           </nav>
         )}
       </header>
+
+      {/* Always-there guide that pulls the visitor on to the next level */}
+      <a
+        href={`#${nextStop.id}`}
+        onClick={() => play("open")}
+        style={{ display: atEnd ? "none" : undefined }}
+        className="btn btn-gold fixed bottom-4 right-4 z-40 shadow-[5px_5px_0_var(--shade)] sm:bottom-14"
+        aria-label={`Continue to ${nextStop.label}`}
+      >
+        <span className="hud-text hidden sm:inline">Next</span>
+        {nextStop.label}
+        <span aria-hidden style={{ animation: "bob 1s ease-in-out infinite" }} className="inline-block">
+          ▶
+        </span>
+      </a>
 
       {/* Little hero walking along the bottom as you scroll */}
       <div aria-hidden className="pointer-events-none fixed inset-x-0 bottom-0 z-40 hidden h-11 sm:block">

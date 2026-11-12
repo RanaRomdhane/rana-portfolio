@@ -3,6 +3,7 @@ import { BugHunt, Contact, Footer, VisitPing } from "@/components/Contact";
 import { Hero } from "@/components/Hero";
 import { Hud } from "@/components/Hud";
 import { Projects } from "@/components/Projects";
+import { Runner } from "@/components/Runner";
 import { About, Education, Experience, Publications, Skills } from "@/components/Sections";
 
 export default function Home() {
@@ -18,6 +19,7 @@ export default function Home() {
         <Education />
         <Skills />
         <Assistant />
+        <Runner />
         <BugHunt />
         <Contact />
       </main>

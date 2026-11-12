@@ -5,8 +5,8 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 
 const PALETTE = {
-  dark: { cubes: ["#3fd9c4", "#ffcb47", "#7ea2ee", "#ff7d6e", "#22306b"], wire: "#3fd9c4", node: "#ffcb47", line: "#7ea2ee", star: "#ffffff" },
-  light: { cubes: ["#0f8f80", "#e0a000", "#3d63b8", "#dc4f3f", "#fffcf2"], wire: "#0f8f80", node: "#e0a000", line: "#3d63b8", star: "#3d63b8" },
+  dark: { cubes: ["#ff8ec9", "#ffd257", "#8fd8ff", "#ff6b8b", "#5a2d91"], wire: "#ff8ec9", node: "#ffd257", line: "#8fd8ff", star: "#ffffff" },
+  light: { cubes: ["#d6338a", "#d99a00", "#2f7fc4", "#e0345f", "#fffafc"], wire: "#d6338a", node: "#d99a00", line: "#2f7fc4", star: "#2f7fc4" },
 };
 
 // Deterministic pseudo-random so the scene looks the same on every render.

@@ -141,14 +141,14 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   return (
     <GameContext.Provider value={value}>
       {children}
-      <div aria-live="polite" className="pointer-events-none fixed bottom-14 right-3 z-[90] flex w-[min(320px,calc(100vw-24px))] flex-col gap-2">
+      <div aria-live="polite" className="pointer-events-none fixed bottom-20 right-4 z-[90] sm:bottom-32 flex w-[min(320px,calc(100vw-24px))] flex-col gap-2">
         {toasts.map((t) => (
           <div
             key={t.id}
             className="pixel-card flex items-center gap-3 px-3 py-2"
             style={{ animation: "toast-in 0.35s steps(6) both", borderColor: "var(--gold)" }}
           >
-            <span aria-hidden className="grid h-9 w-9 shrink-0 place-items-center rounded-full border-[3px] border-[#171b33] bg-gold font-hud text-[0.6rem] text-[#171b33]">
+            <span aria-hidden className="grid h-9 w-9 shrink-0 place-items-center rounded-full border-[3px] border-[#3a1245] bg-gold font-hud text-[0.6rem] text-[#3a1245]">
               ★
             </span>
             <span className="min-w-0">

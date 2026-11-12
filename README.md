@@ -78,8 +78,8 @@ The site works without any extra image: covers and logos are generated. To use r
 | Project screenshot or GIF | `public/projects/` (for example `vision-llm.jpg`, about 1200×675) | that project's `"image": "/projects/vision-llm.jpg"` |
 | Company logo | `public/logos/` (square PNG, for example `soretrak.png`) | that experience's `"logo": "/logos/soretrak.png"` |
 | School logo | `public/logos/` | that school's `"logo": "/logos/enicarthage.png"` |
-| Profile picture | replace `public/media/rana-profile.jpg` (square) | nothing |
-| Talking video | replace `public/media/rana-talking.mp4` (square works best, no sound needed) | nothing |
+
+| Talking video | replace `public/media/twin-talking.mp4` (square works best, no sound needed) | nothing |
 | Idle video (optional) | `public/media/rana-idle.mp4` | `profile.idleVideo: "/media/rana-idle.mp4"` |
 | CV | replace `public/Rana_Romdhane_Resume.pdf` | nothing |
 

@@ -4,9 +4,9 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 
-export type VoxelModel = "robot" | "gem" | "sword" | "globe" | "trophy" | "cap" | "chest" | "heart";
+export type VoxelModel = "robot" | "gem" | "sword" | "globe" | "trophy" | "cap" | "chest" | "heart" | "crown" | "castle";
 
-const C = { teal: "#3fd9c4", gold: "#ffcb47", coral: "#ff7d6e", denim: "#7ea2ee", ink: "#1b2350", white: "#fffcf2", wood: "#b9703f" };
+const C = { teal: "#ff8ec9", gold: "#ffd257", coral: "#ff6b8b", denim: "#8fd8ff", ink: "#2a1038", white: "#fffafc", wood: "#b9703f" };
 
 interface Vox {
   x: number;
@@ -31,7 +31,7 @@ function build(model: VoxelModel): Vox[] {
           let c = face ? C.ink : C.teal;
           if (face && y >= 0 && y <= 1 && (x === -2 || x === -1 || x === 1 || x === 2)) c = C.gold; // eyes
           if (face && y === -2 && Math.abs(x) <= 1) c = C.coral; // smile
-          if (!face && y === 3) c = "#7be9d9";
+          if (!face && y === 3) c = "#ffb8dd";
           add(x, y, z, c);
         }
     // ears + antenna
@@ -46,7 +46,7 @@ function build(model: VoxelModel): Vox[] {
       for (let y = -4; y <= 4; y++)
         for (let z = -4; z <= 4; z++) {
           const d = Math.abs(x) + Math.abs(y) + Math.abs(z);
-          if (d === 4) add(x, y, z, y > 1 ? C.white : y >= 0 ? C.teal : y > -3 ? "#27b3a1" : C.denim);
+          if (d === 4) add(x, y, z, y > 1 ? C.white : y >= 0 ? C.teal : y > -3 ? "#f05fae" : C.denim);
         }
   }
 
@@ -88,7 +88,7 @@ function build(model: VoxelModel): Vox[] {
   }
 
   if (model === "cap") {
-    for (let x = -4; x <= 4; x++) for (let z = -4; z <= 4; z++) add(x, 1, z, Math.abs(x) === 4 || Math.abs(z) === 4 ? "#5f84d6" : C.denim);
+    for (let x = -4; x <= 4; x++) for (let z = -4; z <= 4; z++) add(x, 1, z, Math.abs(x) === 4 || Math.abs(z) === 4 ? "#6cc3f2" : C.denim);
     for (let x = -2; x <= 2; x++) for (let z = -2; z <= 2; z++) for (let y = -2; y <= 0; y++) if (Math.abs(x) === 2 || Math.abs(z) === 2 || y === -2) add(x, y, z, C.ink);
     add(0, 2, 0, C.gold);
     for (let x = 1; x <= 4; x++) add(x, 2, 0, C.gold);
@@ -121,6 +121,56 @@ function build(model: VoxelModel): Vox[] {
         const f = Math.pow(a * a + b * b - 1, 3) - a * a * b * b * b;
         if (f <= 0) for (let z = -1; z <= 1; z++) add(x, y, z, x < -1 && y > 1 && y < 4 && z === 1 && x > -4 ? C.white : z === 0 ? C.coral : "#f0624f");
       }
+  }
+
+  if (model === "crown") {
+    for (let x = -4; x <= 4; x++)
+      for (let z = -4; z <= 4; z++) {
+        const d = Math.sqrt(x * x + z * z);
+        if (d > 4.6 || d <= 3.3) continue;
+        const ang = Math.atan2(z, x);
+        const peak = Math.round(3.4 * Math.pow(Math.abs(Math.cos(ang * 2.5)), 1.6)) - 1;
+        add(x, -3, z, "#f0b93a");
+        for (let y = -2; y <= peak; y++) add(x, y, z, y === -1 ? "#ffe9a3" : C.gold);
+        if (peak >= 2) add(x, peak + 1, z, C.coral);
+      }
+    [[4, 0], [-4, 0], [0, 4], [0, -4]].forEach(([x, z], i) => add(x * 1.25, -1, z * 1.25, i % 2 ? C.denim : C.teal));
+  }
+
+  if (model === "castle") {
+    const stone = C.white;
+    const shade = "#f3d9e8";
+    // outer wall with battlements
+    for (let x = -4; x <= 4; x++)
+      for (let z = -4; z <= 4; z++) {
+        if (Math.abs(x) !== 4 && Math.abs(z) !== 4) continue;
+        for (let y = -4; y <= -1; y++) add(x, y, z, y === -4 ? shade : stone);
+        if ((x + z) % 2 === 0) add(x, 0, z, stone);
+      }
+    // gate
+    add(0, -4, 5, C.ink);
+    add(0, -3, 5, C.ink);
+    // corner towers with pink roofs
+    [-4, 4].forEach((tx) =>
+      [-4, 4].forEach((tz) => {
+        for (let dx = -1; dx <= 1; dx++)
+          for (let dz = -1; dz <= 1; dz++) {
+            for (let y = -4; y <= 2; y++) if (Math.abs(dx) === 1 || Math.abs(dz) === 1) add(tx + dx, y, tz + dz, stone);
+            add(tx + dx, 3, tz + dz, C.teal);
+          }
+        add(tx, 4, tz, C.teal);
+        add(tx, 5, tz, C.gold);
+      }),
+    );
+    // central keep
+    for (let x = -1; x <= 1; x++)
+      for (let z = -1; z <= 1; z++) {
+        for (let y = -4; y <= 4; y++) if (Math.abs(x) === 1 || Math.abs(z) === 1) add(x, y, z, y === 1 && x === 0 ? C.denim : stone);
+        add(x, 5, z, C.teal);
+      }
+    add(0, 6, 0, C.teal);
+    add(0, 7, 0, C.gold);
+    add(1, 7, 0, C.coral);
   }
 
   return v;
@@ -262,7 +312,7 @@ export default function Voxel({ model, size = 180, onPoke, className }: { model:
         >
           <ambientLight intensity={1.1} />
           <directionalLight position={[5, 7, 6]} intensity={2} />
-          <directionalLight position={[-6, -2, 3]} intensity={0.5} color="#7ea2ee" />
+          <directionalLight position={[-6, -2, 3]} intensity={0.5} color="#8fd8ff" />
           <Model voxels={voxels} state={state} calm={calm} />
         </Canvas>
       )}
