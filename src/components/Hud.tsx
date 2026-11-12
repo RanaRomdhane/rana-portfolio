@@ -77,7 +77,6 @@ export function Hud() {
   const [open, setOpen] = useState(false);
   const index = Math.max(0, SECTIONS.findIndex((s) => s.id === active));
   const level = index + 1;
-  const nextStop = SECTIONS[index + 1] ?? { id: "finish", label: "Finish line" };
 
   useEffect(() => {
     if (!open) return;
@@ -173,21 +172,6 @@ export function Hud() {
           </nav>
         )}
       </header>
-
-      {/* Always-there guide that pulls the visitor on to the next level */}
-      <a
-        href={`#${nextStop.id}`}
-        onClick={() => play("open")}
-        style={{ display: atEnd ? "none" : undefined }}
-        className="btn btn-gold fixed bottom-4 right-4 z-40 shadow-[5px_5px_0_var(--shade)] sm:bottom-14"
-        aria-label={`Continue to ${nextStop.label}`}
-      >
-        <span className="hud-text hidden sm:inline">Next</span>
-        {nextStop.label}
-        <span aria-hidden style={{ animation: "bob 1s ease-in-out infinite" }} className="inline-block">
-          ▶
-        </span>
-      </a>
 
       {/* Little hero walking along the bottom as you scroll */}
       <div aria-hidden className="pointer-events-none fixed inset-x-0 bottom-0 z-40 hidden h-11 sm:block">
