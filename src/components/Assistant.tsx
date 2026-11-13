@@ -107,6 +107,7 @@ export function Assistant() {
   const recorderRef = useRef<MediaRecorder | null>(null);
   const recTimer = useRef<number>(0);
   const voiceRef = useRef(true);
+  const speechRun = useRef(0);
   const speaking = status === "speaking";
   const busy = status === "thinking" || status === "transcribing";
 
@@ -131,15 +132,35 @@ export function Assistant() {
     if (el) el.scrollTop = el.scrollHeight;
   }, [messages, status]);
 
-  // Cross-fade: play the talking clip only while the voice is speaking.
+  // The clip moves only while the voice is speaking, then returns to its resting frame.
   useEffect(() => {
     const v = videoRef.current;
     if (!v) return;
-    if (speaking) void v.play().catch(() => {});
-    else {
-      const t = window.setTimeout(() => v.pause(), 700);
-      return () => window.clearTimeout(t);
+    v.muted = true; // must be set in code: browsers refuse to start an unmuted clip
+    if (speaking) {
+      const kick = () => {
+        if (v.paused) void v.play().catch(() => {});
+      };
+      kick();
+      v.addEventListener("canplay", kick);
+      const guard = window.setInterval(kick, 400); // restart if the browser paused it
+      return () => {
+        v.removeEventListener("canplay", kick);
+        window.clearInterval(guard);
+      };
     }
+    const t = window.setTimeout(
+      () => {
+        v.pause();
+        if (!profile.idleVideo) {
+          try {
+            v.currentTime = 0.1;
+          } catch {}
+        }
+      },
+      profile.idleVideo ? 700 : 0,
+    );
+    return () => window.clearTimeout(t);
   }, [speaking]);
 
   const getAudio = () => {
@@ -156,6 +177,7 @@ export function Assistant() {
   };
 
   const stopSpeaking = useCallback(() => {
+    speechRun.current += 1;
     audioRef.current?.pause();
     window.speechSynthesis?.cancel();
     setStatus((s) => (s === "speaking" ? "idle" : s));
@@ -170,27 +192,63 @@ export function Assistant() {
     window.speechSynthesis.speak(u);
   };
 
+  // The voice is made one or two sentences at a time, so it starts talking quickly
+  // instead of waiting for the whole answer to be generated.
   const speak = async (text: string, signal: AbortSignal) => {
-    try {
+    const run = ++speechRun.current;
+    const sentences = text.match(/[^.!?؟\n]+[.!?؟]*\s*/g) ?? [text];
+    const parts: string[] = [];
+    for (const s of sentences) {
+      const last = parts[parts.length - 1];
+      if (last !== undefined && (last + s).length <= 180) parts[parts.length - 1] = last + s;
+      else if (s.trim()) parts.push(s);
+    }
+
+    const fetchPart = async (part: string) => {
       const res = await fetch("/api/tts", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text }),
+        body: JSON.stringify({ text: part.trim() }),
         signal,
       });
       if (!res.ok) throw new Error("voice");
-      const url = URL.createObjectURL(await res.blob());
-      const a = getAudio();
-      a.onended = a.onerror = () => {
-        URL.revokeObjectURL(url);
-        setStatus((s) => (s === "speaking" ? "idle" : s));
-      };
-      a.src = url;
-      setStatus("speaking");
-      await a.play();
+      return res.blob();
+    };
+
+    const playBlob = (blob: Blob) =>
+      new Promise<void>((resolve, reject) => {
+        const url = URL.createObjectURL(blob);
+        const a = getAudio();
+        const done = (ok: boolean) => {
+          a.onended = a.onerror = a.onpause = null;
+          URL.revokeObjectURL(url);
+          if (ok) resolve();
+          else reject(new Error("audio"));
+        };
+        a.onended = a.onpause = () => done(true);
+        a.onerror = () => done(false);
+        a.src = url;
+        a.play().catch(() => done(false));
+      });
+
+    let started = false;
+    try {
+      let next: Promise<Blob> | null = fetchPart(parts[0]);
+      for (let i = 0; i < parts.length && next; i++) {
+        const blob = await next;
+        if (run !== speechRun.current) return;
+        next = i + 1 < parts.length ? fetchPart(parts[i + 1]) : null;
+        next?.catch(() => {}); // handled when awaited
+        started = true;
+        setStatus("speaking");
+        await playBlob(blob);
+        if (run !== speechRun.current) return;
+      }
+      setStatus((s) => (s === "speaking" ? "idle" : s));
     } catch (e) {
-      if ((e as Error).name === "AbortError") return;
-      browserSpeak(text);
+      if ((e as Error).name === "AbortError" || run !== speechRun.current) return;
+      if (started) setStatus("idle");
+      else browserSpeak(text);
     }
   };
 
@@ -308,22 +366,21 @@ export function Assistant() {
         <Reveal>
           <div className="pixel-card mx-auto max-w-sm p-3" style={{ borderColor: speaking ? "var(--gold)" : undefined }}>
             <div className="relative aspect-square overflow-hidden border-[3px] border-line bg-black">
-              {profile.idleVideo ? (
+              {profile.idleVideo && (
                 <video src={profile.idleVideo} autoPlay muted loop playsInline aria-hidden className="absolute inset-0 h-full w-full object-cover" />
-              ) : (
-                /* resting pose: the same clip, held on its first frame */
-                <video src={`${profile.talkingVideo}#t=0.1`} muted playsInline preload="auto" aria-label="Rana's AI twin" className="breathe absolute inset-0 h-full w-full object-cover" />
               )}
+              {/* One clip: held on its first frame while resting, playing while the voice speaks.
+                  With an idle clip set, it fades in over the idle one instead. */}
               <video
                 ref={videoRef}
-                src={profile.talkingVideo}
+                src={`${profile.talkingVideo}#t=0.1`}
                 muted
                 loop
                 playsInline
                 preload="auto"
-                aria-hidden
+                aria-label="Rana's AI twin"
                 className="absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ease-in-out"
-                style={{ opacity: speaking ? 1 : 0 }}
+                style={{ opacity: !profile.idleVideo || speaking ? 1 : 0 }}
               />
             </div>
 

@@ -5,7 +5,7 @@ export const dynamic = "force-dynamic";
 
 /** Turns a reply into speech with Rana's cloned voice. */
 export async function POST(req: Request) {
-  if (!rateLimit(`tts:${clientIp(req)}`, 12, 60_000)) {
+  if (!rateLimit(`tts:${clientIp(req)}`, 40, 60_000)) {
     return Response.json({ error: "rate_limited" }, { status: 429 });
   }
   const key = env("FISH_API_KEY");
